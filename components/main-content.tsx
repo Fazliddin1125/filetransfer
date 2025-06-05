@@ -8,7 +8,6 @@ import { FileListToMe } from "./filetome"
 import { CommentsList } from "./comments-list"
 
 export function MainContent() {
-  
   return (
     <main className="flex-1 p-4 md:p-6 overflow-auto">
       <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Asosiy oyna</h1>
@@ -45,7 +44,8 @@ export function MainContent() {
 
       <div className="min-h-[calc(100vh-16rem)]">
         <Tabs defaultValue="send" className="w-full">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-4 md:mb-6">
+          {/* O'ZGARTIRISH: TabsListga pastdan bo'shliq berish */}
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-6 md:mb-6">
             <TabsTrigger value="send" className="flex items-center gap-2 py-2 md:py-3">
               <Send className="h-4 w-4" />
               <span className="hidden md:inline">Fayl yuborish</span>
@@ -68,19 +68,24 @@ export function MainContent() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="send" className="mt-0">
+          {/* O'ZGARTIRISH: TabsContentga yuqoridan padding berish */}
+          <TabsContent value="send" className="pt-4 mt-6 md:pt-6">
             <Card className="border-primary/20 border-2 dark:border-blue-500/30">
               <CardHeader className="bg-primary/5 dark:bg-blue-500/10 p-4 md:p-6">
                 <CardTitle>Fayl yuborish</CardTitle>
                 <CardDescription>Bu yerda fayllarni yuborishingiz mumkin</CardDescription>
               </CardHeader>
               <CardContent className="p-4 md:p-6">
-                <FileUploader />
+                {/* Agar FileUploader ichidagi elementlar ham bir-biriga yaqin bo'lsa, bu yerga space-y-4 qo'shish mumkin */}
+                <div className="space-y-4"> {/* space-y-4 qo'shildi */}
+                  <FileUploader />
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="receive" className="mt-0">
+          {/* Boshqa TabsContentlarga ham pt-4/pt-6 qo'shildi */}
+          <TabsContent value="receive" className="pt-4 md:pt-6">
             <Card className="border-blue-500/20 border-2">
               <CardHeader className="bg-blue-500/5 p-4 md:p-6">
                 <CardTitle>Qabul qilingan fayllar</CardTitle>
@@ -92,19 +97,19 @@ export function MainContent() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="sent" className="mt-0">
+          <TabsContent value="sent" className="pt-4 md:pt-6">
             <Card className="border-green-500/20 border-2">
               <CardHeader className="bg-green-500/5 p-4 md:p-6">
                 <CardTitle>Yubor fayllaringiz</CardTitle>
                 <CardDescription>Yuborgan fayllaringizni holatlari</CardDescription>
               </CardHeader>
               <CardContent className="p-4 md:p-6">
-                <FileList  />
+                <FileList />
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="downloaded" className="mt-0">
+          <TabsContent value="downloaded" className="pt-4 md:pt-6">
             <Card className="border-amber-500/20 border-2">
               <CardHeader className="bg-amber-500/5 p-4 md:p-6">
                 <CardTitle>Bildirilgan fikrlar</CardTitle>
@@ -120,4 +125,3 @@ export function MainContent() {
     </main>
   )
 }
-

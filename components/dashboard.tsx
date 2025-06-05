@@ -9,7 +9,7 @@ import { MainContent } from "@/components/main-content"
 import { FileStatistics } from "@/components/file-statistics"
 import { AboutMe } from "@/components/about-me"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet" // Import SheetTitle
 import { signOut } from "next-auth/react"
 import Link from "next/link"
 
@@ -38,22 +38,28 @@ export function Dashboard() {
         <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 shadow-sm">
           <div className="flex items-center">
             {isMobile ? (
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="md:hidden">
-                    <Menu className="h-5 w-5" />
-                    <span className="sr-only">Toggle menu</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="p-0 w-[280px]">
-                  <AppSidebar
-                    onViewChange={(view) => {
-                      setActiveView(view)
-                    }}
-                    activeView={activeView}
-                  />
-                </SheetContent>
-              </Sheet>
+             // dashboard.tsx (faqat SheetContent qismi)
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="ghost" size="icon" className="md:hidden">
+      <Menu className="h-5 w-5" />
+      <span className="sr-only">Menyuni almashtirish</span>
+    </Button>
+  </SheetTrigger>
+  {/* O'ZGARISH: `SheetContent` ga aniq kenglik berildi va p-0 saqlandi */}
+  {/* Bu width sizning rasmga mos keladigan kenglikni berishi kerak. */}
+  <SheetContent side="left" className="w-[280px] h-full p-0 bg-background"> {/* w-[280px] qayta qo'shildi */}
+    <SheetTitle className="sr-only">Asosiy Menyusi</SheetTitle>
+    <AppSidebar
+      onViewChange={(view) => {
+        setActiveView(view)
+        // Agar mobil menyu yopilishi kerak bo'lsa, bu yerda SheetClose triggerini chaqirishingiz mumkin.
+        // open={false} ni Sheet ga o'tkazish kerak bo'ladi
+      }}
+      activeView={activeView}
+    />
+  </SheetContent>
+</Sheet>
             ) : (
               <SidebarTrigger />
             )}
@@ -65,7 +71,7 @@ export function Dashboard() {
               variant="outline"
               size={isMobile ? "sm" : "lg"}
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              aria-label="Toggle theme"
+              aria-label="Mavzuni o'zgartirish"
               className={isMobile ? "h-8 px-2" : "h-10 px-4 rounded-lg"}
             >
               {theme === "dark" ? (
@@ -73,13 +79,13 @@ export function Dashboard() {
               ) : (
                 <Moon className={isMobile ? "h-4 w-4" : "h-5 w-5 mr-2"} />
               )}
-              {!isMobile && (theme === "dark" ? "Light Mode" : "Dark Mode")}
+              {!isMobile && (theme === "dark" ? "Yorug' rejim" : "Qorong'u rejim")}
             </Button>
             <Link href={"/register"} ><Button> <PersonStandingIcon/> Foydalanuvchi qo'shish</Button></Link>
             <Button
               variant="destructive"
               size={isMobile ? "sm" : "lg"}
-              aria-label="Log out"
+              aria-label="Chiqish"
               className={isMobile ? "h-8 px-2" : "h-10 px-4 rounded-lg"}
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
@@ -104,4 +110,3 @@ export function Dashboard() {
     </SidebarProvider>
   )
 }
-
