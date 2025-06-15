@@ -93,6 +93,18 @@ export const writeComment = actionClient.schema(commentSchema).action<ReturnActi
 	return JSON.parse(JSON.stringify(data))
 })
 
+
+export const deleteUser = actionClient.schema(idSchema).action<ReturnActionType>(async ({parsedInput}) => {
+	const session = await getServerSession(authOptions)
+	const token = await generateToken(session?.currentUser?._id)
+	const { data } = await axiosClient.post(
+    `/api/user/delete/${parsedInput.id}`,
+	
+    {headers: { Authorization: `Bearer ${token}` }
+	})
+	revalidatePath('/register')
+	return JSON.parse(JSON.stringify(data))
+})
 export const changeStatus = actionClient.schema(statusSchema).action<ReturnActionType>(async ({parsedInput}) => {
 	const session = await getServerSession(authOptions)
 	const token = await generateToken(session?.currentUser?._id)

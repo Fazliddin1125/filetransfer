@@ -20,8 +20,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { register } from "@/lib/auth.action"
 import { signIn } from "next-auth/react"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { IUser } from "@/types"
+import { deleteUser } from "@/action/admin.action"
 
-export default function RegisterPage() {
+interface Props{
+	users?: IUser[]
+}
+export default function RegisterPage({ users }:Props) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,7 +45,11 @@ export default function RegisterPage() {
     toast({ description: message, variant: 'destructive' })
   }
 
-
+  async function onDelete(id: string) {
+	const res = await deleteUser({id})
+	console.log(res)
+    toast({ description: "O'chirildi", variant: 'destructive' })
+  }
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setIsLoading(true)
@@ -61,7 +70,8 @@ export default function RegisterPage() {
 
 
   return (
-    <div className="container flex h-screen items-center justify-center">
+	<>
+	<div className="container flex mt-4 mb-2 items-center justify-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Ro'yxatdan o'tish</CardTitle>
@@ -138,6 +148,39 @@ export default function RegisterPage() {
           </div>
         </CardFooter>
       </Card>
+
+	   
     </div>
+	<table className="mx-auto mt-2 mb-2 border-collapse border border-gray-300">
+      <thead>
+        <tr>
+          <th className="border p-2">Ism Familiya</th>
+          <th className="border p-2">Email</th>
+   
+          <th className="border p-2">Role</th>
+          <th className="border p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users &&
+          users.map((user) => (
+            <tr key={user._id}>
+              <td className="border p-2">{user.fullname}</td>
+              <td className="border p-2">{user.email}</td>
+             
+              <td className="border p-2">{user.role}</td>
+              <td className="border p-2 text-center">
+                <button 
+                    onClick={() => onDelete(user._id)}
+                    className="bg-red-500 text-gray-50 px-2 py-1 text-center rounded-md">
+                    O'chirish
+                </button>
+              </td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+	</>
+    
   )
 }
